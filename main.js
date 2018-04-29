@@ -85,7 +85,6 @@ export default class Main {
     // 创建点
     this.createPoint();
     // setInterval(() => { this.moveSnake(); }, 1000 / SnakeSpeed);
-    requestAnimationFrame(() => { this.render_all(); });
   }
   // 初始化资源
   init_resources() {
@@ -114,8 +113,7 @@ export default class Main {
   }
   // 资源加载完毕方法
   onload_complete_resources() {
-    this.renderMap();
-    this.renderInput();
+    requestAnimationFrame(() => { this.render(); });
   }
   // 创建地图
   createMap() {
@@ -250,18 +248,15 @@ export default class Main {
     ctx.fillRect(x, y, width, height);
   }
   // 渲染
-  render_all() {
-    // this.clearCanvas();
-    // this.renderSnake();
-    // this.renderPoint();
+  render() {
+    this.clearCanvas();
+    this.renderMap();
+    this.renderInput();
+    this.renderSnake();
+    this.renderPoint();
     ctx.drawImage(PointImg, 0, 0);
-    // requestAnimationFrame(() => {
-
-    //   ctx.drawImage(PointImg, 0, 0);
-    //   // this.render_all();
-    // });
-    requestAnimationFrame(function(){
-      ctx.drawImage(PointImg, 0, 0);
-    })
+    requestAnimationFrame(() => {
+      this.render();
+    });
   }
 }
