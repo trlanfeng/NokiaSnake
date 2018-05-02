@@ -29,7 +29,7 @@ class Main extends eui.UILayer {
             egret.ticker.resume();
         }
 
-        this.stage.scaleMode = egret.StageScaleMode.SHOW_ALL;
+        this.stage.scaleMode = egret.StageScaleMode.NO_SCALE;
         this.stage.width = this.MapWidth * this.SpriteWidth;
         this.stage.height = this.MapHeight * this.SpriteHeight;
 
