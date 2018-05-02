@@ -3,7 +3,7 @@ class Main extends eui.UILayer {
     private SnakeSpeed = 1;
 
     private MapWidth = 26;
-    private MapHeight = 15;
+    private MapHeight = 26;
 
     private SpriteWidth = 8;
     private SpriteHeight = 8;
@@ -77,10 +77,14 @@ class Main extends eui.UILayer {
     }
     createGameContainer() {
         this.GameContainer = new egret.Sprite();
-        this.GameContainer.width = 314;
-        this.GameContainer.height = 316;
+        // this.GameContainer.width = 314;
+        // this.GameContainer.height = 316;
+        this.GameContainer.width = this.MapWidth * this.SpriteWidth;
+        this.GameContainer.height = this.MapHeight * this.SpriteHeight;
         this.GameContainer.x = 219;
         this.GameContainer.y = 304;
+        this.GameContainer.scaleX = 1.5;
+        this.GameContainer.scaleY = 1.5;
         this.stage.addChild(this.GameContainer);
     }
     // 创建地图

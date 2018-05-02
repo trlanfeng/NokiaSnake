@@ -49,7 +49,7 @@ var Main = (function (_super) {
         var _this = _super !== null && _super.apply(this, arguments) || this;
         _this.SnakeSpeed = 1;
         _this.MapWidth = 26;
-        _this.MapHeight = 15;
+        _this.MapHeight = 26;
         _this.SpriteWidth = 8;
         _this.SpriteHeight = 8;
         _this.snake = [];
@@ -134,10 +134,14 @@ var Main = (function (_super) {
     };
     Main.prototype.createGameContainer = function () {
         this.GameContainer = new egret.Sprite();
-        this.GameContainer.width = 314;
-        this.GameContainer.height = 316;
+        // this.GameContainer.width = 314;
+        // this.GameContainer.height = 316;
+        this.GameContainer.width = this.MapWidth * this.SpriteWidth;
+        this.GameContainer.height = this.MapHeight * this.SpriteHeight;
         this.GameContainer.x = 219;
         this.GameContainer.y = 304;
+        this.GameContainer.scaleX = 1.5;
+        this.GameContainer.scaleY = 1.5;
         this.stage.addChild(this.GameContainer);
     };
     // 创建地图
