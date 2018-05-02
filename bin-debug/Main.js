@@ -70,8 +70,6 @@ var Main = (function (_super) {
             egret.ticker.resume();
         };
         this.stage.scaleMode = egret.StageScaleMode.SHOW_ALL;
-        this.stage.width = this.MapWidth * this.SpriteWidth;
-        this.stage.height = this.MapHeight * this.SpriteHeight;
         this.runGame().catch(function (e) {
             console.log(e);
         });
@@ -82,12 +80,12 @@ var Main = (function (_super) {
                 switch (_a.label) {
                     case 0: 
                     // 加载资源
-                    return [4 /*yield*/, this.loadResource()
-                        // 创建地图
-                    ];
+                    return [4 /*yield*/, this.loadResource()];
                     case 1:
                         // 加载资源
                         _a.sent();
+                        this.createBackground();
+                        this.createGameContainer();
                         // 创建地图
                         this.createMap();
                         // 创建蛇
@@ -129,6 +127,19 @@ var Main = (function (_super) {
             });
         });
     };
+    Main.prototype.createBackground = function () {
+        var bg = new egret.Bitmap();
+        bg.texture = RES.getRes('bg_jpg');
+        this.stage.addChild(bg);
+    };
+    Main.prototype.createGameContainer = function () {
+        this.GameContainer = new egret.Sprite();
+        this.GameContainer.width = 314;
+        this.GameContainer.height = 316;
+        this.GameContainer.x = 219;
+        this.GameContainer.y = 304;
+        this.stage.addChild(this.GameContainer);
+    };
     // 创建地图
     Main.prototype.createMap = function () {
         for (var i = 0; i < this.MapWidth * this.MapHeight; i++) {
@@ -150,17 +161,13 @@ var Main = (function (_super) {
     };
     // 渲染地图
     Main.prototype.renderMap = function () {
-        var bg = new egret.Sprite();
-        bg.graphics.beginFill(0xffffff);
-        bg.graphics.drawRect(0, 0, this.stage.width, this.stage.height);
-        bg.graphics.endFill();
         for (var i = 0; i < this.bg_border.length; i++) {
             var x = this.bg_border[i] % this.MapWidth * this.SpriteHeight;
             var y = Math.floor(this.bg_border[i] / this.MapWidth) * this.SpriteHeight;
             var wall = new Wall();
             wall.x = x;
             wall.y = y;
-            this.stage.addChild(wall);
+            this.GameContainer.addChild(wall);
         }
     };
     // 渲染按钮
@@ -214,7 +221,7 @@ var Main = (function (_super) {
         var point = new Point();
         point.x = x;
         point.y = y;
-        this.stage.addChild(point);
+        this.GameContainer.addChild(point);
     };
     // 生成点位
     Main.prototype.generatePointIndex = function () {
@@ -263,7 +270,7 @@ var Main = (function (_super) {
             var snake = new Snake();
             snake.x = x;
             snake.y = y;
-            this.stage.addChild(snake);
+            this.GameContainer.addChild(snake);
         }
     };
     // 清理canvas用于重绘
