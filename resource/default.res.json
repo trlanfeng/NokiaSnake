@@ -1,0 +1,40 @@
+{
+	"groups": [
+		{
+			"keys": "input_down_png,input_left_png,input_right_png,input_up_png,point_png,snake_png",
+			"name": "preload"
+		}
+	],
+	"resources": [
+		{
+			"url": "imgs/input_down.png",
+			"type": "image",
+			"name": "input_down_png"
+		},
+		{
+			"url": "imgs/input_left.png",
+			"type": "image",
+			"name": "input_left_png"
+		},
+		{
+			"url": "imgs/input_right.png",
+			"type": "image",
+			"name": "input_right_png"
+		},
+		{
+			"url": "imgs/input_up.png",
+			"type": "image",
+			"name": "input_up_png"
+		},
+		{
+			"url": "imgs/point.png",
+			"type": "image",
+			"name": "point_png"
+		},
+		{
+			"url": "imgs/snake.png",
+			"type": "image",
+			"name": "snake_png"
+		}
+	]
+}
