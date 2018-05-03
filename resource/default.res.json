@@ -1,7 +1,7 @@
 {
 	"groups": [
 		{
-			"keys": "input_down_png,input_left_png,input_right_png,input_up_png,point_png,snake_png,bg_jpg",
+			"keys": "input_down_png,input_left_png,input_right_png,input_up_png,point_png,snake_png,bg_jpg,bg_png",
 			"name": "preload"
 		}
 	],
@@ -40,6 +40,11 @@
 			"url": "imgs/bg.jpg",
 			"type": "image",
 			"name": "bg_jpg"
+		},
+		{
+			"name": "bg_png",
+			"type": "image",
+			"url": "imgs/bg.png"
 		}
 	]
 }
