@@ -2,11 +2,11 @@ class Main extends eui.UILayer {
 
     private SnakeSpeed = 1;
 
-    private MapWidth = 26;
-    private MapHeight = 26;
+    private MapWidth = 83;
+    private MapHeight = 47;
 
     private SpriteWidth = 8;
-    private SpriteHeight = 8;
+    private SpriteHeight = 10;
 
     private DesignWidth = 750;
     private DesignHeight = 1334;
