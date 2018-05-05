@@ -10,6 +10,7 @@
 	"game": [
 		"bin-debug/LoadingUI.js",
 		"bin-debug/Main.js",
+		"bin-debug/Pixel.js",
 		"bin-debug/Platform.js",
 		"bin-debug/Point.js",
 		"bin-debug/SnakeBody.js",

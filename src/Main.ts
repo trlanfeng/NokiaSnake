@@ -1,30 +1,38 @@
 class Main extends eui.UILayer {
 
+    // 模拟像素点数量
+    public static MapWidth = 81;
+    public static MapHeight = 45;
+    // 每个模拟像素点的宽高
+    public static PixelWidth = 5;
+    public static PixelHeight = 6;
+    // UI设计像素
+    public static DesignWidth = 1080;
+    public static DesignHeight = 1920;
+    // 游戏区域格子
+    public static GridColumn = 20;
+    public static GridRow = 11;
+    // 点宽高
+    public static PointWidth = Main.PixelWidth * 3;
+    public static PointHeight = Main.PixelHeight * 3;
+
+    // 蛇移动速度
     private SnakeSpeed = 1;
-
-    private MapWidth = 83;
-    private MapHeight = 47;
-
-    private SpriteWidth = 8;
-    private SpriteHeight = 10;
-
-    private DesignWidth = 750;
-    private DesignHeight = 1334;
-
-    private OffsetY = 0;
-
-    private pointPosition;
-    public snakeArray = [];
+    // 蛇身数组
+    private snakeArray = [];
     private snakeDirection = 0;
     private snakeDefaultLength = 5;
-
+    // 纵向偏移量
+    private OffsetY = 0;
+    // 点位
+    private PointGridPosition;
     private point: Point;
     private snake: egret.Sprite;
-
     private bg_border = [];
-
+    // 游戏容器（带边框）
     private GameContainer: egret.Sprite;
-
+    // 游戏区域，移动区域
+    private GameArea: egret.Sprite;
     private timer: egret.Timer;
 
     protected createChildren(): void {
@@ -86,14 +94,22 @@ class Main extends eui.UILayer {
     // 初始化
     initGame() {
         this.stage.scaleMode = egret.StageScaleMode.FIXED_WIDTH;
-        this.OffsetY = Math.floor((this.stage.stageHeight - this.DesignHeight) / 2);
         this.GameContainer = new egret.Sprite();
+        this.GameArea = new egret.Sprite();
         this.snake = new egret.Sprite();
-        this.GameContainer.addChild(this.snake);
         this.point = new Point();
-        this.GameContainer.addChild(this.point);
 
-        this.timer = new egret.Timer(200, 0);
+        this.GameContainer.addChild(this.GameArea);
+        this.GameArea.x = 2 * Main.PixelWidth;
+        this.GameArea.y = 2 * Main.PixelHeight;
+        this.GameArea.width = Main.MapWidth * Main.PixelWidth;
+        this.GameArea.height = Main.MapHeight * Main.PixelHeight;
+
+
+        this.GameArea.addChild(this.snake);
+        this.GameArea.addChild(this.point);
+
+        this.timer = new egret.Timer(1000, 0);
         this.timer.addEventListener(egret.TimerEvent.TIMER, () => {
             this.moveSnake();
             this.updateSnake();
@@ -126,28 +142,24 @@ class Main extends eui.UILayer {
     }
     // 创建游戏容器
     createGameContainer() {
-        // this.GameContainer.width = 314;
-        // this.GameContainer.height = 316;
-        this.GameContainer.width = this.MapWidth * this.SpriteWidth;
-        this.GameContainer.height = this.MapHeight * this.SpriteHeight;
-        this.GameContainer.x = 219;
-        this.GameContainer.y = 304 + this.OffsetY;
-        this.GameContainer.scaleX = 1.5;
-        this.GameContainer.scaleY = 1.5;
+        this.GameContainer.width = (Main.MapWidth + 2) * Main.PixelWidth;
+        this.GameContainer.height = (Main.MapHeight + 2) * Main.PixelHeight;
+        this.GameContainer.x = Math.round((Main.DesignWidth - this.GameContainer.width) / 2);
+        this.GameContainer.y = 450 + this.OffsetY;
         this.stage.addChild(this.GameContainer);
     }
     // 创建地图
     createMap() {
-        for (let i = 0; i < this.MapWidth * this.MapHeight; i++) {
-            if (i < this.MapWidth) {
+        for (let i = 0; i < (Main.MapWidth + 2) * Main.MapHeight; i++) {
+            if (i < (Main.MapWidth + 2)) {
                 this.createWall(i);
-            } else if (i > this.MapWidth * (this.MapHeight - 1) && i < this.MapWidth * this.MapHeight) {
+            } else if (i > (Main.MapWidth + 2) * (Main.MapHeight - 1) && i < (Main.MapWidth + 2) * Main.MapHeight) {
                 this.createWall(i);
             } else {
-                if (i % this.MapWidth == 0) {
+                if (i % (Main.MapWidth + 2) == 0) {
                     this.createWall(i);
                 }
-                if (i % this.MapWidth == (this.MapWidth - 1)) {
+                if (i % (Main.MapWidth + 2) == ((Main.MapWidth + 2) - 1)) {
                     this.createWall(i);
                 }
             }
@@ -155,44 +167,26 @@ class Main extends eui.UILayer {
     }
     // 创建具体墙
     createWall(index) {
-        let pos_x = index % this.MapWidth;
-        let x = pos_x * this.SpriteHeight;
-        let pos_y = Math.floor(index / this.MapWidth);
-        let y = pos_y * this.SpriteHeight;
-        let wall = new Wall();
+        let pos_x = index % (Main.MapWidth + 2);
+        let x = pos_x * Main.PixelWidth;
+        let pos_y = Math.floor(index / (Main.MapWidth + 2));
+        let y = pos_y * Main.PixelHeight;
+        let wall = new Pixel();
         wall.x = x;
         wall.y = y;
         this.GameContainer.addChild(wall);
         this.bg_border.push({ x: pos_x, y: pos_y });
     }
-    // 创建蛇，默认5节:snakeDefaultLength
-    createSnake() {
-        // head
-        this.snakeArray.push({
-            x: Math.floor(this.MapWidth / 2),
-            y: Math.floor(this.MapHeight / 2),
-        });
-        // body
-        for (let i = 1; i < this.snakeDefaultLength; i++) {
-            this.snakeArray.push({
-                x: Math.floor(this.MapWidth / 2 - i),
-                y: Math.floor(this.MapHeight / 2),
-            });
-        }
-        for (let i = 0; i < this.snakeArray.length; i++) {
-            let x = this.snakeArray[i].x * this.SpriteWidth;
-            let y = this.snakeArray[i].y * this.SpriteHeight;
-            let body = new SnakeBody();
-            body.x = x;
-            body.y = y;
-            this.snake.addChild(body);
-        }
-    }
     // 创建点
     createPoint() {
-        this.pointPosition = this.generatePointIndex();
-        this.point.x = this.pointPosition.x * this.SpriteWidth;
-        this.point.y = this.pointPosition.y * this.SpriteHeight;
+        this.point = new Point();
+        this.PointGridPosition = this.generatePointIndex();
+        // this.setPointPosition(this.pointPosition.x, this.pointPosition.y);
+        this.setPointPosition(19, 9);
+    }
+    setPointPosition(grid_x, grid_y) {
+        this.point.x = grid_x * (Main.PointWidth + Main.PixelWidth);
+        this.point.y = grid_y * (Main.PointHeight + Main.PixelHeight);
     }
     // 生成点位，并检测是否重叠
     generatePointIndex() {
@@ -200,8 +194,8 @@ class Main extends eui.UILayer {
         let is_hit = false;
         do {
             is_hit = false;
-            x = (Math.floor(Math.random() * (this.MapWidth - 2)) + 1);
-            y = (Math.floor(Math.random() * (this.MapHeight - 2)) + 1);
+            x = Math.floor(Math.random() * Main.GridColumn);
+            y = Math.floor(Math.random() * Main.GridRow);
             for (let i = 0; i < this.snakeArray.length; i++) {
                 if (x == this.snakeArray[i].x && y == this.snakeArray[i].y) {
                     is_hit = true;
@@ -211,6 +205,27 @@ class Main extends eui.UILayer {
         } while (is_hit)
         return { x, y };
     }
+    // 创建蛇，默认5节:snakeDefaultLength
+    createSnake() {
+        // body
+        for (let i = 0; i < this.snakeDefaultLength; i++) {
+            this.snakeArray.push({
+                x: Math.floor(Main.GridColumn / 2 - i),
+                y: Math.floor(Main.GridRow / 2),
+                dir: 4,
+            });
+        }
+        this.snakeArray[this.snakeArray.length - 1].dir = 0;
+        for (let i = 0; i < this.snakeArray.length; i++) {
+            let x = this.snakeArray[i].x * Main.PointWidth + this.snakeArray[i].x * Main.PixelWidth - 1;
+            let y = this.snakeArray[i].y * Main.PointHeight + this.snakeArray[i].y * Main.PixelHeight - 1;
+            let body = new SnakeBody(this.snakeArray[i].dir);
+            body.x = x;
+            body.y = y;
+            this.snake.addChild(body);
+        }
+    }
+
     // 改变蛇方向
     changeDirection(arrow) {
         switch (arrow) {
@@ -239,43 +254,54 @@ class Main extends eui.UILayer {
                 this.snakeArray.unshift({
                     x: old_snake[0].x,
                     y: old_snake[0].y - 1,
+                    dir: 1,
                 });
                 break;
             case 2:
                 this.snakeArray.unshift({
                     x: old_snake[0].x,
                     y: old_snake[0].y + 1,
+                    dir: 2,
                 });
                 break;
             case 3:
                 this.snakeArray.unshift({
                     x: old_snake[0].x - 1,
                     y: old_snake[0].y,
+                    dir: 3,
                 });
                 break;
             case 4:
                 this.snakeArray.unshift({
                     x: old_snake[0].x + 1,
                     y: old_snake[0].y,
+                    dir: 4,
                 });
                 break;
         }
         this.snakeArray.pop();
+        this.snakeArray[this.snakeArray.length - 1].dir = 0;
     }
     // 更新蛇位置
     updateSnake() {
-        console.log('update snake');
-        // 如果蛇数组长度大于实际长度，补全
-        if (this.snake.numChildren !== this.snakeArray.length) {
-            let left_count = this.snakeArray.length - this.snake.numChildren;
-            for (let i = 0; i < left_count; i++) {
-                this.snake.addChild(new SnakeBody());
-            }
-        }
+        // // 如果蛇数组长度大于实际长度，补全
+        // if (this.snake.numChildren !== this.snakeArray.length) {
+        //     for (let i = this.snake.numChildren; i < this.snakeArray.length; i++) {
+        //         this.snake.addChild(new SnakeBody(this.snakeArray[i].dir));
+        //     }
+        // }
+        // for (let i = 0; i < this.snakeArray.length; i++) {
+        //     let body: SnakeBody = this.snake.getChildAt(i) as SnakeBody;
+        //     body.x = this.snakeArray[i].x * Main.PointWidth + this.snakeArray[i].x * Main.PixelWidth - 1;
+        //     body.y = this.snakeArray[i].y * Main.PointHeight + this.snakeArray[i].y * Main.PixelHeight - 1;
+        //     body.changeDir(this.snakeArray[i].dir);
+        // }
+        this.snake.removeChildren();
         for (let i = 0; i < this.snakeArray.length; i++) {
-            let body = this.snake.getChildAt(i);
-            body.x = this.snakeArray[i].x * this.SpriteWidth;
-            body.y = this.snakeArray[i].y * this.SpriteHeight;
+            let body = new SnakeBody(this.snakeArray[i].dir);
+            body.x = this.snakeArray[i].x * Main.PointWidth + this.snakeArray[i].x * Main.PixelWidth - 1;
+            body.y = this.snakeArray[i].y * Main.PointHeight + this.snakeArray[i].y * Main.PixelHeight - 1;
+            this.snake.addChild(body);
         }
     }
     // 检查游戏是否结束

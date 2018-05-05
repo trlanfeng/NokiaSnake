@@ -1,32 +1,36 @@
 class SnakeBody extends egret.Sprite {
 
-    // private spriteWidth = 3;
-    // private spriteHeight = 4;
-    private grid_arr: Object[];
+    private grid_arr = [];
     private dir;
-    private grid_x;
-    private grid_y;
 
-    constructor(dir: number, x: number, y: number) {
+    constructor(dir: number) {
         super();
         this.dir = dir;
-        this.grid_x = x;
-        this.grid_y = y;
+        this.create();
+    }
+
+    changeDir(dir: number) {
+        this.dir = dir;
+        this.create();
+    }
+
+    create() {
+        this.removeChildren();
         for (let i = -1; i < 2; i++) {
             for (let j = -1; j < 2; j++) {
                 this.grid_arr.push({
-                    x: x + i,
-                    y: y + i,
+                    x: i,
+                    y: j,
                 });
             }
         }
-        switch (dir) {
+        switch (this.dir) {
             case 1:
                 // 上
                 for (let i = -1; i < 2; i++) {
                     this.grid_arr.push({
-                        x: x + i,
-                        y: y + 2,
+                        x: i,
+                        y: 2,
                     })
                 }
                 break;
@@ -34,8 +38,8 @@ class SnakeBody extends egret.Sprite {
                 // 下
                 for (let i = -1; i < 2; i++) {
                     this.grid_arr.push({
-                        x: x + i,
-                        y: y - 2,
+                        x: i,
+                        y: -2,
                     })
                 }
                 break;
@@ -43,8 +47,8 @@ class SnakeBody extends egret.Sprite {
                 // 左
                 for (let i = -1; i < 2; i++) {
                     this.grid_arr.push({
-                        x: x + 2,
-                        y: y + i,
+                        x: 2,
+                        y: i,
                     })
                 }
                 break;
@@ -52,12 +56,17 @@ class SnakeBody extends egret.Sprite {
                 // 右
                 for (let i = -1; i < 2; i++) {
                     this.grid_arr.push({
-                        x: x - 2,
-                        y: y + i,
+                        x: - 2,
+                        y: i,
                     })
                 }
                 break;
         }
-        // this.texture = RES.getRes('snake_png');
+        for (let i = 0; i < this.grid_arr.length; i++) {
+            let p = new Pixel();
+            p.x = this.grid_arr[i].x * Main.PixelWidth;
+            p.y = this.grid_arr[i].y * Main.PixelHeight;
+            this.addChild(p);
+        }
     }
 }

@@ -1,29 +1,25 @@
 class Point extends egret.Sprite {
     private grid_x;
     private grid_y;
-    private grid_arr;
-    // x,y 为网格位置，非像素位置
-    constructor(x: number, y: number) {
+    private grid_arr = [];
+    // x,y 为模拟像素位置
+    constructor() {
         super();
-        this.grid_x = x;
-        this.grid_y = y;
-        this.grid_arr.push({
-            x: x - 1, y
-        });
-        this.grid_arr.push({
-            x: x + 1, y
-        });
-        this.grid_arr.push({
-            x, y: y - 1
-        });
-        this.grid_arr.push({
-            x, y: y + 1
-        });
-        for (let i = 0; i < this.grid_arr.length; i++) {
-            let p = new Pixel();
-            p.x = this.grid_arr[i].x;
-            p.y = this.grid_arr[i].y;
-            this.addChild(p);
-        }
+        let p_up = new Pixel();
+        p_up.x = 0;
+        p_up.y = -6;
+        this.addChild(p_up);
+        let p_down = new Pixel();
+        p_down.x = 0;
+        p_down.y = 6;
+        this.addChild(p_down);
+        let p_left = new Pixel();
+        p_left.x = -6;
+        p_left.y = 0;
+        this.addChild(p_left);
+        let p_right = new Pixel();
+        p_right.x = 6;
+        p_right.y = 0;
+        this.addChild(p_right);
     }
 }
