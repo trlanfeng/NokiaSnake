@@ -2,7 +2,7 @@ class Main extends eui.UILayer {
 
     // 模拟像素点数量
     public static MapWidth = 81;
-    public static MapHeight = 45;
+    public static MapHeight = 71;
     // 每个模拟像素点的宽高
     public static PixelWidth = 5;
     public static PixelHeight = 6;
@@ -17,7 +17,7 @@ class Main extends eui.UILayer {
     public static PointHeight = Main.PixelHeight * 3;
 
     // 蛇移动速度
-    private SnakeSpeed = 1;
+    private SnakeSpeed = 5;
     // 蛇身数组
     private snakeArray = [];
     private snakeDirection = 0;
@@ -100,8 +100,8 @@ class Main extends eui.UILayer {
         this.point = new Point();
 
         this.GameContainer.addChild(this.GameArea);
-        this.GameArea.x = 2 * Main.PixelWidth;
-        this.GameArea.y = 2 * Main.PixelHeight;
+        this.GameArea.x = 3 * Main.PixelWidth;
+        this.GameArea.y = 3 * Main.PixelHeight;
         this.GameArea.width = Main.MapWidth * Main.PixelWidth;
         this.GameArea.height = Main.MapHeight * Main.PixelHeight;
 
@@ -320,13 +320,18 @@ class Main extends eui.UILayer {
                 }
             }
         }
-        // 检查是否与墙碰撞
+        // // 检查是否与墙碰撞
+        // if (!is_hit) {
+        //     for (let i = 0; i < this.bg_border.length; i++) {
+        //         if (x == this.bg_border[i].x && y == this.bg_border[i].y) {
+        //             is_hit = true;
+        //             break;
+        //         }
+        //     }
+        // }
         if (!is_hit) {
-            for (let i = 0; i < this.bg_border.length; i++) {
-                if (x == this.bg_border[i].x && y == this.bg_border[i].y) {
-                    is_hit = true;
-                    break;
-                }
+            if (this.snakeArray[0].x < 0 || this.snakeArray[0].y < 0 || this.snakeArray[0].x >= Main.GridColumn || this.snakeArray[0].y >= Main.GridRow) {
+                is_hit = true;
             }
         }
         if (is_hit) {
